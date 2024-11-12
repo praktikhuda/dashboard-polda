@@ -32,7 +32,7 @@
                                 <div class="card-body">
                                     <h4 class="card-title">${a.judul}</h4>
                                     <p class="card-text text-muted font-size-13">${a.deskripsi}</p>
-                                    <button type="button" class="btn btn-warning" id="belumSiap">Edit</button>
+                                    <button type="button" class="btn btn-warning" id="editTable-${a.id}">Edit</button>
                                     <button type="button" class="btn btn-primary" id="lihatTable-${a.id}">Lihat</button>
                                     <button type="button" class="btn btn-danger" id="belumSiap">Hapus</button>
                                 </div>
@@ -94,7 +94,7 @@
                                                     </div>
                                                 </div>
                                             `;
-                                            
+
                                         })
                                         $("#dynamicForm").html(dataField)
                                         $("#editField").show()
@@ -120,6 +120,9 @@
             $("#templates-modal").load("{{ route('modal') }}", function() {
                 $('#BelumSiap').modal('show');
             });
+
+        })
+        $("#templates-card").on("click", "#tambahFiled", function() {
 
         })
     })
