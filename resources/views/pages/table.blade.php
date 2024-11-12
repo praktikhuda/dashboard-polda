@@ -6,6 +6,8 @@
             <div class="card-body">
                 <h5 class="card-title align-middle">Table
                     <button class="btn btn-outline-primary btn-sm ms-3" type="button" id="tambahTable">Tambah Table</button>
+
+                    <h1>test</h1>
                 </h5>
                 <div class="row" id="templates-card"></div>
             </div>
