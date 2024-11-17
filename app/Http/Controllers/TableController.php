@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class TableController extends Controller
@@ -13,42 +14,60 @@ class TableController extends Controller
         return view('pages.table');
     }
 
-    public function tambah (Request $req)
+    public function tambah(Request $req)
     {
         $validator = Validator::make($req->all(), [
-            'jsonData' => 'required'
+            'judul' => 'required|string',
+            'deskripsi' => 'required|string',
+            'data' => 'required|json',
+            'image' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
         ]);
+
         if ($validator->fails()) {
             return response()->json([
-                'status'    => 'error',
-                'errors'     => $validator->errors()
+                'status' => 'error',
+                'errors' => $validator->errors(),
             ]);
         }
-        $data = $req->jsonData;
 
-        if (is_array($data['data'])) {
-            $data['data'] = json_encode($data['data']);
+        $data = $req->only(['judul', 'deskripsi']);
+
+        $dataDecoded = json_decode($req->data, true);
+
+        if (is_array($dataDecoded)) {
+            $data['data'] = json_encode($dataDecoded);
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data tidak valid',
+            ]);
+        }   
+
+        if ($req->hasFile('image')) {
+            $imagePath = $req->file('image')->store('uploads', 'public');
+            $data['image'] = $imagePath;
         }
 
         $tambah = DB::table('table')->insert($data);
+
         if ($tambah) {
             return response()->json([
-                'status'    => 'berhasil',
-                'toast'     => 'Berhasil menambah',
-                'resets'    => 'all'
+                'status' => 'berhasil',
+                'toast' => 'Berhasil menambah table',
+                'resets' => 'all',
             ]);
         } else {
             return response()->json([
-                'status'    => 'error',
-                'toast'     => 'Username atau password salah!',
-                'resets'    => 'all'
+                'status' => 'error',
+                'toast' => 'Gagal menambah table',
+                'resets' => 'all',
             ]);
         }
     }
 
     public function lihat ()
     {
-        $table = DB::table('table')->get();
+        $table = DB::table('table')->orderBy('id', 'desc')->get();
         return response()->json($table);
     }
 

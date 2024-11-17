@@ -32,6 +32,7 @@ Route::prefix('modal')->group(function () {
     Route::get('/modal', function () {return view('pages.modal.modal-v1');})->name('modal');
     Route::get('/modal-v2', function () {return view('pages.modal.modal-v2');})->name('modal-v2');
     Route::get('/modal-v3', function () {return view('pages.modal.modal-v3');})->name('modal-v3');
+    Route::get('/toast-v1', function () {return view('pages.modal.toast');})->name('toast-v1');
 });
 
 Route::get('/table', [TableController::class, 'index'])->name('table');
