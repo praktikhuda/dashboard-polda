@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Validator;
 
 class TableController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth.user'); // Tambahkan middleware di sini
+    }
+
     public function index () 
     {
         return view('pages.table');
@@ -41,12 +46,16 @@ class TableController extends Controller
                 'status' => 'error',
                 'message' => 'Data tidak valid',
             ]);
-        }   
+        }
 
         if ($req->hasFile('image')) {
             $imagePath = $req->file('image')->store('uploads', 'public');
-            $data['image'] = $imagePath;
+            $extension = $req->file('image')->extension();
+            $imageName = $req->judul . '_' . time() . '.' . $extension; 
+            $data['image'] = $imageName;
+            $req->file('image')->move(public_path('storage/uploads'), $imageName);
         }
+
 
         $tambah = DB::table('table')->insert($data);
 
@@ -63,6 +72,58 @@ class TableController extends Controller
                 'resets' => 'all',
             ]);
         }
+    }
+
+    public function edit(Request $req, $id)
+    {
+        $validator = Validator::make($req->all(), [
+            'judul' => 'required|string',
+            'deskripsi' => 'required|string',
+            'data' => 'required|json',
+            'image' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'errors' => $validator->errors(),
+            ]);
+        }
+
+        $judul = $req->input('judul');
+        $deskripsi = $req->input('deskripsi');
+        $dataKol = json_decode($req->input('data'), true);
+        $image = $req->file('image');
+        $imageInput = $req->input('image');
+
+        $data = [
+            'judul' => $judul,
+            'deskripsi' => $deskripsi,
+            'data' => json_encode($dataKol),
+        ];
+
+        if ($image) {
+            $imageName = $judul . '_' . time() . '.' . $image->extension();
+            $image->storeAs('uploads', $imageName, 'public');
+            $data['image'] = $imageName;
+        } elseif ($imageInput) {
+            $data['image'] = $imageInput;
+        }
+
+        $update = DB::table('table')->where('id', $id)->update($data);
+
+        if ($update) {
+            return response()->json([
+                'status' => 'berhasil',
+                'toast' => 'Berhasil mengupdate table',
+            ]);
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'toast' => 'Gagal mengupdate table',
+            ]);
+        }
+
     }
 
     public function lihat ()
@@ -87,21 +148,44 @@ class TableController extends Controller
         return response()->json($table);
     }
 
-    public function edit(Request $req)
+    public function hapus(Request $req, $id)
     {
+        // Validasi input
         $validator = Validator::make($req->all(), [
-            'id' => 'required'
+            'id' => 'required|integer|exists:table,id', // Pastikan ID valid dan ada di tabel
         ]);
+
         if ($validator->fails()) {
             return response()->json([
-                'status'    => 'error',
-                'errors'     => $validator->errors()
+                'status' => 'error',
+                'errors' => $validator->errors(),
             ]);
         }
-        $data = $req->id;
-        $table = DB::table('table')->where('id', $data)->get();
-        return response()->json($table);
+
+        try {
+            // Hapus data
+            $delete = DB::table('table')->where('id', $id)->delete();
+
+            if ($delete) {
+                return response()->json([
+                    'status' => 'berhasil',
+                    'toast' => 'Berhasil menghapus data',
+                ]);
+            } else {
+                return response()->json([
+                    'status' => 'error',
+                    'toast' => 'Gagal menghapus data',
+                ]);
+            }
+        } catch (\Exception $e) {
+            // Tangani jika ada error tak terduga
+            return response()->json([
+                'status' => 'error',
+                'toast' => 'Terjadi kesalahan: ' . $e->getMessage(),
+            ]);
+        }
     }
+
 
     public function lihatTable (Request $req)
     {

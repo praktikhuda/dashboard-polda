@@ -124,12 +124,7 @@
                     data: data,
                     success: function(response) {
                         if (response.status === 'success') {
-                            $("#templates-modal").load("{{ route('modal') }}", function() {
-                                $("#confirmLogin").click(function() {
-                                    window.location.replace(response.redirect)
-                                })
-                                $('#ModalLogin').modal('show');
-                            });
+                            window.location.replace(response.redirect)
                         } else {
                             $("#templates-modal").load("{{ route('modal') }}", function() {
                                 $('#warningModal').modal('show');

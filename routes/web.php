@@ -17,13 +17,13 @@ use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 |
 */
 
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
 
 Route::get('/', [AuthController::class, 'index'])->name('auth.login');
 Route::prefix('auth')
 ->group(function () {
     Route::post('/login', [AuthController::class, 'authenticate'])->name('auth.authenticate');
-    Route::get('/logout', [AuthController::class, 'logout'])->name('auth.logout');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
     Route::get('/reloadCaptcha', [AuthController::class, 'reloadCaptcha'])->name('auth.reloadCaptcha');
 });
 
@@ -35,16 +35,25 @@ Route::prefix('modal')->group(function () {
     Route::get('/toast-v1', function () {return view('pages.modal.toast');})->name('toast-v1');
 });
 
-Route::get('/table', [TableController::class, 'index'])->name('table');
-Route::post('/tambah', [TableController::class, 'tambah'])->name('tambahTable');
-Route::get('/lihat', [TableController::class, 'lihat'])->name('lihatTable');
-Route::get('/cari', [TableController::class, 'cari'])->name('cariTable');
-Route::get('/edit', [TableController::class, 'edit'])->name('editTable');
-Route::get('/lihatTable', [TableController::class, 'lihatTable'])->name('lihatTable-v1');
-Route::get('/lihatTable_v2', [TableController::class, 'lihatTable_v2'])->name('lihatTable-v2');
-Route::get('/tambahTable__', [TableController::class, 'tambahTable__'])->name('lihatTable__');
-Route::post('/addTable__', [TableController::class, 'addTable__'])->name('addTable__');
-Route::get('/cariTable__', [TableController::class, 'cariTable__'])->name('cariTable__');
+Route::middleware(['auth.user'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    
+    Route::get('/table', [TableController::class, 'index'])->name('table');
+    Route::post('/tambah', [TableController::class, 'tambah'])->name('tambahTable');
+    Route::get('/lihat', [TableController::class, 'lihat'])->name('lihatTable');
+    Route::get('/cari', [TableController::class, 'cari'])->name('cariTable');
+    Route::post('/edit/{id}', [TableController::class, 'edit'])->name('editTable');
+    Route::get('/hapus/{id}', [TableController::class, 'hapus'])->name('hapusTable');
+    
+    
+    Route::get('/lihatTable', [TableController::class, 'lihatTable'])->name('lihatTable-v1');
+    Route::get('/lihatTable_v2', [TableController::class, 'lihatTable_v2'])->name('lihatTable-v2');
+    Route::get('/tambahTable__', [TableController::class, 'tambahTable__'])->name('lihatTable__');
+    Route::post('/addTable__', [TableController::class, 'addTable__'])->name('addTable__');
+    Route::get('/cariTable__', [TableController::class, 'cariTable__'])->name('cariTable__');
+});
+
+
 
 
 Route::get('/datatable', function () {

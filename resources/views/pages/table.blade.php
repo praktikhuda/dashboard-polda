@@ -27,14 +27,13 @@
                     tampilan += `
                         <div class="col-md-3 mt-4">
                             <div class="card">
-                                <img class="card-img-top img-fluid" src="{{ asset('assets/images/small/img-1.jpg') }}"
-                                    alt="Card image cap">
+                                <img class="card-img-top img-fluid opacity-50" src="{{ asset('storage/uploads/${a.image}') }}" alt="Card image cap" style="object-fit: cover; height: 200px; float:center">
                                 <div class="card-body">
                                     <h4 class="card-title">${a.judul}</h4>
                                     <p class="card-text text-muted font-size-13">${a.deskripsi}</p>
                                     <button type="button" class="btn btn-warning" id="editTable-${a.id}">Edit</button>
                                     <button type="button" class="btn btn-primary" id="lihatTable-${a.id}">Lihat</button>
-                                    <button type="button" class="btn btn-danger" id="belumSiap">Hapus</button>
+                                    <button type="button" class="btn btn-danger" id="hapusTable-${a.id}">Hapus</button>
                                 </div>
                             </div>
                         </div>
@@ -54,6 +53,8 @@
                     // KLIK MODAL
                     $("#templates-card").on("click", "#editTable-" + a.id, function() {
                         $("#templates-modal").load("{{ route('modal-v2') }}", function() {
+                            $(".modal-footer").append(`<button type="button" class="btn btn-warning" id="editFieldModal">Edit</button>`)
+                            $("#addField").hide()
                             $.ajax({
                                 type: "get",
                                 url: "{{ route('cariTable') }}",
@@ -64,31 +65,38 @@
                                     $.each(response, function(i, a) {
                                         let dataField = ""
                                         $("#field-1").val(a.judul)
+                                        $("#field-2").val(a.deskripsi)
+                                        $("#gambarfieldHidden").val(a.image)
+                                        $("#idfield").val(a.id)
                                         let dataJson = Array.isArray(a.data) ? a.data : JSON.parse(a.data);
                                         $.each(dataJson, function(j, b) {
-                                            console.log(b.title);
-
                                             dataField += `
-                                                <div id="form-group">
+                                                <img id="imageShow" class="text-center pb-3" width="200px" src="{{ asset('storage/uploads/${a.image}') }}" alt="">
+                                                <div class="form-group">
                                                     <div class="card">
                                                         <div class="card-body">
                                                             <div class="row">
                                                                 <div class="col-md-12">
                                                                     <div class="mb-3">
                                                                         <label for="field-3" class="form-label">Nama Kolom</label>
-                                                                        <input type="text" class="form-control" id="field-3" placeholder="Nama Kolom" value="${b.title}">
+                                                                        <input type="text" class="form-control nama-kolom" id="field-3" placeholder="Nama Kolom" value="${b.title}">
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-12">
                                                                     <div class="mb-3">
                                                                         <label for="field-3" class="form-label">Title Kolom</label>
-                                                                        <input type="text" class="form-control" id="field-4" placeholder="Title">
+                                                                        <input type="text" class="form-control title-kolom" id="field-4" placeholder="Title" value="${b.nama_col}">
                                                                     </div>
                                                                 </div>
-                                                                <span>
-                                                                    <button type="button" class="btn btn-primary" id="tambahFiled"><li class="fas fa-plus"></li> Tambah</button>
-                                                                    <button type="button" class="btn btn-danger" id="removeField"><li class="fas fa-trash"></li> Hapus</button>
-                                                                </span>
+                                                               <div class="col-md-12">
+                                                                    <div class="mb-3">
+                                                                        <label for="field-4" class="form-label">Type</label>
+                                                                        <select class="form-control type-kolom" id="field-5" name="state">
+                                                                            <option value="text" ${b.type === 'text' ? 'selected' : ''}>Text</option>
+                                                                            <option value="number" ${b.type === 'number' ? 'selected' : ''}>Number</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -97,7 +105,12 @@
 
                                         })
                                         $("#dynamicForm").html(dataField)
-                                        $("#editField").show()
+                                        $("#gambarfield").change(function(e) {
+                                            let file = e.target.files[0];
+                                            if (file) {
+                                                $('#imageShow').attr('src', URL.createObjectURL(file));
+                                            }
+                                        })
                                         $("#simpanField").hide()
                                     })
                                 }
@@ -105,6 +118,35 @@
                             $('#modalTable').modal('show');
                         })
                     })
+                    $("#templates-card").on("click", "#hapusTable-" + a.id, function() {
+                        $.ajax({
+                            type: "get",
+                            url: "/hapus/" + a.id,
+                            data: {
+                                id: a.id
+                            },
+                            success: function(data) {
+                                if (data.status === "berhasil") {
+                                    $("#templates-toast").load("{{ route('toast-v1') }}", function(response, status, xhr) {
+                                        if (status === "success") {
+                                            $("#pesantoast").text(data.toast);
+                                            $('#liveToast').toast('show');
+                                        } else {
+                                            console.error("Gagal memuat konten: " + xhr.status + " " + xhr.statusText);
+                                        }
+                                    });
+
+                                } else {
+                                    alert("Gagal menghapus data: " + data.toast);
+                                }
+                            },
+                            error: function(xhr) {
+                                console.error("Terjadi error:", xhr.responseText);
+                                alert("Terjadi kesalahan saat menghapus data.");
+                            }
+                        });
+                    });
+
                 })
                 $("#templates-card").html(tampilan);
             }
@@ -120,9 +162,6 @@
             $("#templates-modal").load("{{ route('modal') }}", function() {
                 $('#BelumSiap').modal('show');
             });
-
-        })
-        $("#templates-card").on("click", "#tambahFiled", function() {
 
         })
     })

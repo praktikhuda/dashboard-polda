@@ -145,13 +145,12 @@
     <script>
         $(document).ready(function() {
             $("#logout").click(function(event) {
-                event.preventDefault(); // Mencegah aksi default
-                // Mengirim permintaan AJAX untuk logout di server
+                event.preventDefault();
                 $.ajax({
-                    type: "GET",
+                    type: "post",
                     url: "{{ route('auth.logout') }}",
-                    data: {
-                        _token: $('meta[name="csrf-token"]').attr('content') // Sertakan CSRF token
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Sertakan CSRF token
                     },
                     success: function(response) {
                         window.location.href = response.redirect;

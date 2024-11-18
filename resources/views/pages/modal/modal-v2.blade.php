@@ -8,7 +8,6 @@
                      aria-label="Close"></button>
              </div>
              <div class="modal-body">
-
                  <div class="card">
                      <div class="card-body">
                          <div class="row">
@@ -28,6 +27,8 @@
                                  <label for="field-3" class="form-label">Image Table</label>
                                  <div class="input-group mb-3">
                                      <input type="file" class="form-control" id="gambarfield" aria-describedby="inputGroupFileAddon03" aria-label="Upload">
+                                     <input type="hidden" class="form-control" id="gambarfieldHidden" aria-describedby="inputGroupFileAddon03" aria-label="Upload">
+                                     <input type="hidden" class="form-control" id="idfield">
                                  </div>
                              </div>
                          </div>
@@ -39,7 +40,7 @@
              <div class="modal-footer">
                  <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
                  <button type="button" class="btn btn-primary" id="simpanField">Simpan</button>
-                 <button type="button" class="btn btn-warning" id="editField">Edit</button>
+
              </div>
          </div>
      </div>
@@ -47,7 +48,7 @@
  <div id="templates-toast"></div>
  <script>
      $(document).ready(function() {
-         $("#editField").hide()
+         $("#imageShow").hide()
          $('#addField').click(function() {
              $('#dynamicForm').append(`
                 <div id="form-group">
@@ -143,6 +144,70 @@
                      console.error("Terjadi error: " + xhr.responseText);
                  }
              });
+         });
+
+     });
+     $("#templates-modal").on("click", "#editFieldModal", function(e) {
+         e.preventDefault();
+
+         console.log("Mengirim data untuk diedit...");
+
+         let judul = $('#field-1').val();
+         let deskripsi = $('#field-2').val();
+         let id = $('#idfield').val();
+
+         let data = [];
+         $('#dynamicForm').find('.form-group').each(function() {
+             let namaCol = $(this).find('.nama-kolom').val();
+             let title = $(this).find('.title-kolom').val();
+             let type = $(this).find('.type-kolom').val();
+
+             if (namaCol && title) {
+                 data.push({
+                     nama_col: namaCol,
+                     title: title,
+                     type: type
+                 });
+             }
+         });
+
+         if (!judul || !deskripsi || data.length === 0 || !id) {
+             alert("Harap isi semua field yang diperlukan.");
+             return;
+         }
+
+         let gambar = $("#gambarfield")[0].files[0];
+
+         let gambarNull = gambar ? gambar : $("#gambarfieldHidden").val();
+
+         let formData = new FormData();
+         formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
+         formData.append('judul', judul);
+         formData.append('deskripsi', deskripsi);
+         formData.append('image', gambarNull);
+         formData.append('data', JSON.stringify(data));
+
+         $.ajax({
+             type: "POST",
+             url: "/edit/" + id,
+             data: formData,
+             processData: false,
+             contentType: false,
+             success: function(data) {
+                 $("#templates-toast").load("{{ route('toast-v1') }}", function(response, status, xhr) {
+                     if (status == "success") {
+                         $("#pesantoast").text(data.toast);
+                         $('#liveToast').toast('show');
+                     } else {
+                         console.error("Gagal memuat konten: " + xhr.status + " " + xhr.statusText);
+                     }
+                 });
+
+                 $('#modalTable').modal('hide');
+             },
+             error: function(xhr) {
+                 console.error("Error:", xhr.responseText);
+             }
          });
 
      });
