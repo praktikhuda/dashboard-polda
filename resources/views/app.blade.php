@@ -29,37 +29,8 @@
     <!-- select2 -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 
-    <style>
-        @media print {
-
-            .dataTables_filter,
-            .dataTables_info,
-            .dataTables_paginate,
-            .dataTables_length,
-            .dt-buttons {
-                display: none !important;
-            }
-
-            body {
-                margin: 0;
-            }
-        }
-
-        #cetakPdf {
-            padding: 0px;
-        }
-
-        #pdfTitle {
-            text-align: center;
-            font-size: 20px;
-            margin-bottom: 20px;
-        }
-
-
-        .dropup .hide-toggle.dropdown-toggle::after {
-            display: none !important;
-        }
-    </style>
+    <!-- DropZone JS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.css">
 </head>
 
 <body data-topbar="dark">
@@ -140,10 +111,14 @@
     <!-- select2 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
 
+    <!-- DropZone JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.js"></script>
+
     @yield('js')
 
     <script>
         $(document).ready(function() {
+            // $("#username").text();
             $("#logout").click(function(event) {
                 event.preventDefault();
                 $.ajax({
@@ -176,6 +151,96 @@
                 $(this).parent('.form-group').remove();
             });
         });
+
+        function loadData() {
+            $.ajax({
+                type: "GET",
+                url: "{{ route('lihatTable') }}",
+                success: function(response) {
+                    let tampilan = "";
+                    $.each(response, function(i, a) {
+                        tampilan += `
+                    <div class="col-md-3 mt-4">
+                        <div class="card">
+                            <img class="card-img-top img-fluid opacity-50" src="{{ asset('storage/uploads/${a.image}') }}" alt="Card image cap" style="object-fit: cover; height: 200px; float:center">
+                            <div class="card-body">
+                                <h4 class="card-title">${a.judul}</h4>
+                                <p class="card-text text-muted font-size-13">${a.deskripsi}</p>
+                                <button type="button" class="btn btn-warning editTable" data-id="${a.id}">Edit</button>
+                                <button type="button" class="btn btn-primary lihatTable" data-id="${a.id}">Lihat</button>
+                                <button type="button" class="btn btn-danger hapusTable" data-id="${a.id}">Hapus</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                    });
+                    $("#templates-card").html(tampilan);
+                }
+            });
+        }
+
+
+                function loadTable() {
+            $.ajax({
+                type: "GET",
+                url: "{{ route('cariTable') }}",
+                data: {
+                    id: id
+                },
+                success: function(response) {
+                    $.each(response, function(i, a) {
+                        $("#judul").text(a.judul).append(`<button class="btn btn-outline-primary btn-sm ms-3" type="button" id="tambahTable">Tambah Table</button>`);
+                        $("#deskripsi").text(a.deskripsi);
+
+                        let dataJson = Array.isArray(a.data) ? a.data : JSON.parse(a.data);
+                        let name_col = [];
+                        let data__ = [];
+
+                        $.each(dataJson, function(j, b) {
+                            name_col.push({
+                                title: b.title,
+                                data: b.nama_col
+                            });
+                        });
+
+                        $.ajax({
+                            type: "get",
+                            url: "{{ route('cariTable__') }}",
+                            data: {
+                                id: id
+                            },
+                            success: function(response) {
+                                $.each(response, function(k, c) {
+                                    let dataJson = Array.isArray(c.data) ? c.data : JSON.parse(c.data);
+                                    $.each(dataJson, function(l, d) {
+                                        data__.push(d);
+                                    });
+                                });
+
+                                $("#myTableModal").DataTable({
+                                    destroy: true,
+                                    lengthMenu: [4],
+                                    pageLength: 4,
+                                    data: data__,
+                                    processing: true,
+                                    columns: [{
+                                            title: "No",
+                                            width: "25px",
+                                            className: "text-center",
+                                            render: function(data, type, row, meta) {
+                                                return meta.row + meta.settings._iDisplayStart + 1;
+                                            }
+                                        },
+                                        ...name_col
+                                    ],
+                                })
+                            }
+                        });
+                    });
+                }
+
+            });
+        }
     </script>
 
 </body>

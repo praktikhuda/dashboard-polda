@@ -53,12 +53,7 @@
                                 <input class="form-control" type="password" id="subject2" name="passowrd" placeholder="Password">
                             </div>
                         </div>
-
-                        <p>Having trouble in sing in?</p>
-
-                        <button type="submit" class="btn btn-primary w-100 px-4" id="singin">Sing In</button>
-
-                        <p class="card-title-desc mt-3">Don't have an account? <a href="javascript:void(0)" id="belumSiap"><b>Request Now</b></a></p>
+                        <button type="submit" class="btn btn-primary w-100 px-4" id="singin">Sing In</button> 
                     </form>
                     <!-- end form -->
                 </div>

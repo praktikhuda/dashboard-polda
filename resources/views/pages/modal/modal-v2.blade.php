@@ -137,7 +137,7 @@
                              console.error("Gagal memuat konten: " + xhr.status + " " + xhr.statusText);
                          }
                      });
-
+                     loadData();
                      $('#modalTable').modal('hide');
                  },
                  error: function(xhr) {
@@ -202,7 +202,7 @@
                          console.error("Gagal memuat konten: " + xhr.status + " " + xhr.statusText);
                      }
                  });
-
+                 loadData()
                  $('#modalTable').modal('hide');
              },
              error: function(xhr) {
