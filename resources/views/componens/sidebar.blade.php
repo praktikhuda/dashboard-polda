@@ -20,6 +20,12 @@
                         <span>Table</span>
                     </a>
                 </li>
+                <li>
+                    <a href="{{ route('user') }}" class="waves-effect">
+                        <i class="fas fa-user"></i>
+                        <span>User</span>
+                    </a>
+                </li>
             </ul>
         </div>
         <!-- Sidebar -->

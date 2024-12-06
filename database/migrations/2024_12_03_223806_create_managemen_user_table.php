@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('table_inventaris', function (Blueprint $table) {
+        Schema::create('managemen_user', function (Blueprint $table) {
             $table->id();
-            $table->
+            $table->string('name');
+            $table->string('username');
+            $table->string('password');
             $table->timestamps();
         });
     }
@@ -23,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('table_inventaris');
+        Schema::dropIfExists('managemen_user');
     }
 };

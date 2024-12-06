@@ -4,7 +4,7 @@
 <head>
 
     <meta charset="utf-8" />
-    <title>Dashboard | Amezia - Admin & Dashboard</title>
+    <title>Dashboard Data Inventaris</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
     <meta content="Themesbrand" name="author" />
@@ -54,8 +54,6 @@
             <div class="page-content">
                 <div class="container-fluid">
 
-                    <!-- start page title -->
-                    @include('componens.breadcrumb')
                     <!-- end page title -->
                     @yield('content')
                 </div>

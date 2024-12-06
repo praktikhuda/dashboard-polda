@@ -1,6 +1,22 @@
 @extends('app')
 @section('content')
 <div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-flex align-items-center justify-content-between">
+            <h4 class="mb-0 font-size-18">Lihat Table</h4>
+
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a href="javascript: void(0);">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="javascript: void(0);">Table</a></li>
+                    <li class="breadcrumb-item active">Lihat Table</li>
+                </ol>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="row">
     <div class="col-xl-12">
         <div class="card" id="card">
             <div class="card-body">
@@ -30,6 +46,9 @@
     $(document).ready(function() {
         const urlParams = new URLSearchParams(window.location.search);
         const id = urlParams.get("id");
+        $("#download").click(function() {
+            window.location.href = "/print?id=" + id;
+        })
         loadTable();
 
         function loadTable() {
@@ -72,7 +91,7 @@
 
             parsedData.forEach((col) => {
                 if (col.type === 'number') {
-                    tfoot += `<th class="text-end">100 <p id="jumlahTotal"></p></th>`;
+                    tfoot += `<th class="text-end"></th>`;
                 } else {
                     tfoot += `<th class="text-end"></th>`;
                 }
@@ -85,6 +104,7 @@
             return parsedData.map((col) => ({
                 title: col.title,
                 data: col.nama_col,
+                type: col.type || 'text',
             }));
         }
 
@@ -98,7 +118,7 @@
                 },
                 success: function(response) {
                     console.log(response.length);
-                    
+
                     if (!response || response.length === 0) {
                         console.error("Data tabel kosong.");
                         return;
@@ -129,10 +149,35 @@
                             return meta.row + meta.settings._iDisplayStart + 1;
                         },
                     },
-                    ...columns,
+                    ...columns.map((col) => ({
+                        ...col,
+                        className: col.type === 'number' ? 'text-end' : 'text-start',
+                    })),
                 ],
+                footerCallback: function(row, data, start, end, display) {
+                    const api = this.api();
+                    const footerCells = $(this).find('tfoot th');
+
+                    columns.forEach((column, index) => {
+                        if (column.type === 'number') {
+                            const total = api
+                                .column(index + 1, {
+                                    page: 'current'
+                                })
+                                .data()
+                                .reduce((a, b) => a + (parseFloat(b) || 0), 0);
+                            console.log(total);
+
+
+                            $(footerCells[index + 1]).html(total);
+                        } else {
+                            $(footerCells[index + 1]).html('');
+                        }
+                    });
+                },
             });
         }
+
 
         $("#judul").on("click", "#tambahTable", function() {
             $.ajax({

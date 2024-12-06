@@ -295,4 +295,47 @@ class TableController extends Controller
         $table = DB::table('isi_table')->where('id_table', $data)->get();
         return response()->json($table);
     }
+
+    public function user()
+    {
+        return view('pages.user');
+    }
+
+    public function cariUser()
+    {
+        $table = DB::table('users')->orderBy('id', 'desc')->get();
+        return response()->json($table);
+    }
+
+    public function tambahUser(Request $req)
+    {
+        $validator = Validator::make($req->all(), [
+            "name"          => "required",
+            "username"      => "required",
+            "email"         => "required",
+            "password"      => "required"            
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'status'    => 'error',
+                'errors'     => $validator->errors()
+            ]);
+        }
+        $data = $req->all();
+        // $tambah = DB::table('users')->insert($data);
+
+        if ($data) {
+            return response()->json([
+                'status' => 'berhasil',
+                'toast' => 'Berhasil menambah user',
+                'resets' => 'all',
+            ]);
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'toast' => 'Gagal menambah user',
+                'resets' => 'all',
+            ]);
+        }
+    }
 }

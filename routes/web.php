@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TableController;
@@ -32,6 +33,7 @@ Route::prefix('modal')->group(function () {
     Route::get('/modal', function () {return view('pages.modal.modal-v1');})->name('modal');
     Route::get('/modal-v2', function () {return view('pages.modal.modal-v2');})->name('modal-v2');
     Route::get('/modal-v3', function () {return view('pages.modal.modal-v3');})->name('modal-v3');
+    Route::get('/modal-v4', function () {return view('pages.modal.modal-v4');})->name('modal-v4');
     Route::get('/toast-v1', function () {return view('pages.modal.toast');})->name('toast-v1');
 });
 
@@ -51,6 +53,15 @@ Route::middleware(['auth.user'])->group(function () {
     Route::get('/tambahTable__', [TableController::class, 'tambahTable__'])->name('lihatTable__');
     Route::post('/addTable__', [TableController::class, 'addTable__'])->name('addTable__');
     Route::get('/cariTable__', [TableController::class, 'cariTable__'])->name('cariTable__');
+
+    Route::get('/print', function (Request $request) {
+        $id = $request->query('id');
+        return view('pages.print', ['id' => $id]);
+    })->name('print');
+
+    Route::get('/user', [TableController::class, 'user'])->name('user');
+    Route::get('/cariUser', [TableController::class, 'cariUser'])->name('cariUser');
+    Route::post('/tambahUser', [TableController::class, 'tambahUser'])->name('tambahUser');
 });
 
 

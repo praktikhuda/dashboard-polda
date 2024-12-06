@@ -53,7 +53,7 @@
                                 <input class="form-control" type="password" id="subject2" name="passowrd" placeholder="Password">
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100 px-4" id="singin">Sing In</button> 
+                        <button type="submit" class="btn btn-primary w-100 px-4" id="singin">Sing In</button>
                     </form>
                     <!-- end form -->
                 </div>
@@ -84,7 +84,7 @@
         $(document).ready(function() {
             $("#myform").submit(function(event) {
                 event.preventDefault();
-                let email = $("#name").val();
+                let username = $("#name").val();
                 let password = $("#subject2").val();
                 let errors = [];
 
@@ -99,9 +99,9 @@
                     `);
                 }
 
-                if (!email) {
-                    showError("name", "Email tidak boleh kosong.");
-                    errors.push("Email tidak boleh kosong.");
+                if (!username) {
+                    showError("name", "username tidak boleh kosong.");
+                    errors.push("username tidak boleh kosong.");
                 }
                 if (!password) {
                     showError("subject2", "Password tidak boleh kosong.");
@@ -109,7 +109,7 @@
                 }
 
                 let data = {
-                    email: email,
+                    username: username,
                     password: password,
                     _token: $('meta[name="csrf-token"]').attr('content')
                 };

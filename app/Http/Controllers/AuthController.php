@@ -24,7 +24,7 @@ class AuthController extends Controller
     public function authenticate(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email'      => 'required',
+            'username'      => 'required',
             'password'      => 'required'
         ]);
 
@@ -34,9 +34,9 @@ class AuthController extends Controller
                 'errors'     => $validator->errors()
             ]);
         }
-        $email = $request->email;
+        $username = $request->username;
         $user = DB::table('users')
-            ->where('email', $email)
+            ->where('username', $username)
             ->first();
         if (!$user) {
             return response()->json([
@@ -47,7 +47,7 @@ class AuthController extends Controller
         }
 
         $credentials = [
-            'email'      => $request->email,
+            'username'      => $request->username,
             'password'      => $request->password
         ];
 
@@ -56,7 +56,7 @@ class AuthController extends Controller
             $request->session()->regenerate();
 
             $session = [
-                'email'      => $request->username,
+                'username'      => $request->username,
             ];
 
             Session::put($session);
