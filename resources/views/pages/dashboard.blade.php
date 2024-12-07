@@ -7,8 +7,6 @@
 
             <div class="page-title-right">
                 <ol class="breadcrumb m-0">
-                    <li class="breadcrumb-item"><a href="javascript: void(0);">Amezia</a></li>
-                    <li class="breadcrumb-item"><a href="javascript: void(0);">Dashboards</a></li>
                     <li class="breadcrumb-item active">Dashboard</li>
                 </ol>
             </div>
@@ -17,51 +15,76 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-6">
-        <div class="card">
-            <div class="card-body">
-                <div id="carouselExampleCaption" class="carousel slide" data-bs-ride="carousel">
-                    <!-- Indicators -->
-                    <div class="carousel-indicators">
-                        <button type="button" data-bs-target="#carouselExampleCaption" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                        <button type="button" data-bs-target="#carouselExampleCaption" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                        <button type="button" data-bs-target="#carouselExampleCaption" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    <img src="{{ asset('assets/images/small/img-7.jpg') }}" style="object-fit: cover; height: 500px; float:center">
+
+    <div class="row pt-3">
+        <!-- Card for Tribrata News -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm border-light rounded">
+                <a href="/polda/tribrata-news/online.html" class="text-decoration-none">
+                    <div class="card-body text-center">
+                        <i class="bi bi-newspaper" style="font-size: 40px; color: #ff5733;"></i> <!-- Adjusted icon color -->
+                        <h3 class="card-title mt-3 text-dark">Tribrata News</h3>
+                        <p class="card-text text-muted">Daftar berita terbaru Kepolisian Daerah Istimewa Yogyakarta</p>
                     </div>
-                    <!-- Carousel items -->
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <img src="{{ asset('assets/images/small/img-7.jpg') }}" class="d-block w-100" alt="First slide">
-                            <div class="carousel-caption d-none d-md-block">
-                                <h3>First slide label</h3>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                            </div>
-                        </div>
-                        <div class="carousel-item">
-                            <img src="{{ asset('assets/images/small/img-5.jpg') }}" class="d-block w-100" alt="Second slide">
-                            <div class="carousel-caption d-none d-md-block">
-                                <h3>Second slide label</h3>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                            </div>
-                        </div>
-                        <div class="carousel-item">
-                            <img src="{{ asset('assets/images/small/img-4.jpg') }}" class="d-block w-100" alt="Third slide">
-                            <div class="carousel-caption d-none d-md-block">
-                                <h3>Third slide label</h3>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Controls -->
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaption" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaption" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
-                </div>
+                </a>
             </div>
+        </div>
+
+        <!-- Card for Galeri -->
+        <div class="col-lg-4 mt-4 mt-lg-0">
+            <div class="card shadow-sm border-light rounded">
+                <a href="/polda/galeri.html" class="text-decoration-none">
+                    <div class="card-body text-center">
+                        <i class="bi bi-images" style="font-size: 40px; color: #ff5733;"></i> <!-- Adjusted icon color -->
+                        <h3 class="card-title mt-3 text-dark">Galeri</h3>
+                        <p class="card-text text-muted">Daftar galeri kegiatan Kepolisian Daerah Istimewa Yogyakarta</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Card for Agenda -->
+        <div class="col-lg-4 mt-4 mt-lg-0">
+            <div class="card shadow-sm border-light rounded">
+                <a href="/polda/agenda.html" class="text-decoration-none">
+                    <div class="card-body text-center">
+                        <i class="bi bi-calendar-check-fill" style="font-size: 40px; color: #ff5733;"></i> <!-- Adjusted icon color -->
+                        <h3 class="card-title mt-3 text-dark">Agenda</h3>
+                        <p class="card-text text-muted">Daftar agenda kegiatan Kepolisian Daerah Istimewa Yogyakarta</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="row">
+    <div class="col-lg-12 d-block d-lg-none">
+        <h3 class="mb-0 polda-css-2">Visi dan Misi KAPOLDA</h3>
+        <p class="fst-italic">
+            Irjen Pol Suwondo Nainggolan, S.I.K., M.H. </p>
+    </div>
+    <div class="col-lg-5">
+        <img src="https://jogja.polri.go.id/polda/file/sambutan.jpeg" class="img-fluid polda-css-3" alt="">
+    </div>
+    <div class="col-lg-7 pt-4 pt-lg-0 content">
+        <h3 class="d-none d-lg-block mb-0">Visi dan Misi KAPOLDA</h3>
+        <p class="fst-italic d-none d-lg-block">
+            Irjen Pol Suwondo Nainggolan, S.I.K., M.H. </p>
+        <div class="summernote">
+            <p>Kepala Kepolisian Daerah Istimewa Yogyakarta mengeluarkan visi yaitu</p>
+            <ul>
+                <li>Terwujudnya Yogyakarta yang Aman dan tertib<br></li>
+            </ul>
+            <div><br></div>
+            <div>Adapun misi dari Polda Daerah Istimewa Yogyakarta adalah<br></div>
+            <ul>
+                <li>Melindungi<br></li>
+                <li>Mengayomi<br></li>
+                <li>Dan melayani masyarakat</li>
+            </ul>
         </div>
     </div>
 </div>

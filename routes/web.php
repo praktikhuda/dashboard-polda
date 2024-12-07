@@ -62,6 +62,8 @@ Route::middleware(['auth.user'])->group(function () {
     Route::get('/user', [TableController::class, 'user'])->name('user');
     Route::get('/cariUser', [TableController::class, 'cariUser'])->name('cariUser');
     Route::post('/tambahUser', [TableController::class, 'tambahUser'])->name('tambahUser');
+    Route::post('/ubahUser', [TableController::class, 'ubahUser'])->name('ubahUser');
+    Route::get('/hapusUser/{id}', [TableController::class, 'hapusUser'])->name('hapusUser');
 });
 
 

@@ -83,7 +83,6 @@
                             let dataJson = Array.isArray(a.data) ? a.data : JSON.parse(a.data);
                             $.each(dataJson, function(j, b) {
                                 dataField += `
-                                                    <img id="imageShow" class="text-center pb-3" width="200px" src="{{ asset('storage/uploads/${a.image}') }}" alt="">
                                                     <div class="form-group">
                                                         <div class="card">
                                                             <div class="card-body">

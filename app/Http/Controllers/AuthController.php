@@ -55,16 +55,22 @@ class AuthController extends Controller
 
             $request->session()->regenerate();
 
+            $userName = $user->name;  // Assuming 'name' is the column that stores the user's name.
+
             $session = [
-                'username'      => $request->username,
+                'username' => $request->username,
+                'name'     => $userName, // Add the user's name to the session
             ];
+
+            Session::put($session);
 
             Session::put($session);
             return response()->json([
                 'status'    => 'success',
                 'toast'     => 'Login berhasil',
                 'resets'    => 'all',
-                'redirect'  => route('dashboard')
+                'redirect'  => route('dashboard'),
+                'name'      => $userName
             ]);
         } else {
             return response()->json([

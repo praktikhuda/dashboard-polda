@@ -52,9 +52,9 @@
             success: function(response) {
                 $("#myTableModal").DataTable({
                     destroy: true,
+                    processing: true,
                     lengthMenu: [10, 25, 50, 100],
                     data: response,
-                    processing: true,
                     columns: [{
                             title: "No",
                             width: "25px",
@@ -77,12 +77,12 @@
                             className: "text-center",
                             render: function(data, type, row, meta) {
                                 return `
-                                    <button type="button" class="btn btn-warning">
+                                    <a type="button" href="javascript:void(0);" class="btn btn-warning ubahUser">
                                         <i class="fas fa-pen fs-5"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-danger">
+                                    </a>
+                                    <a type="button" href="javascript:void(0);" class="btn btn-danger hapusUser">
                                         <i class="fas fa-trash-alt fs-5"></i>
-                                    </button>
+                                    </a>
                                 `;
                             },
                         }
@@ -91,13 +91,61 @@
             }
         });
     }
+
     $(document).ready(function() {
         loadDataUser()
 
         $("#tambahUser").click(function() {
             $("#templates-modal").load("{{ route('modal-v4') }}", function() {
+                $("#simpanField").show()
+                $("#ubahField").hide()
+                $("#judulModal").text("Tambah User")
                 $('#modalTable').modal('show');
             })
+        })
+
+        $("#myTableModal").on("click", ".ubahUser", function() {
+            let data = $("#myTableModal").DataTable().row($(this).closest("tr")).data();
+            $("#templates-modal").load("{{ route('modal-v4') }}", function() {
+                $("#simpanField").hide()
+                $("#ubahField").show()
+                $("#judulModal").text(data.name)
+                $('#modalTable').modal('show');
+
+                $("#modalTable").attr("data-action", "edit");
+
+                $("#idUser").val(data.id)
+                $("#field-1").val(data.name);
+                $("#field-2").val(data.username);
+                $("#field-3").val(data.email);
+            })
+        })
+
+        $("#myTableModal").on("click", ".hapusUser", function() {
+            let data = $("#myTableModal").DataTable().row($(this).closest("tr")).data();
+            $.ajax({
+                type: "GET",
+                url: "/hapusUser/" + data.id,
+                success: function(data) {
+                    if (data.status === "berhasil") {
+                        $("#templates-toast").load("{{ route('toast-v1') }}", function(response, status, xhr) {
+                            if (status === "success") {
+                                $("#pesantoast").text(data.toast);
+                                $('#liveToast').toast('show');
+                            } else {
+                                console.error("Gagal memuat konten: " + xhr.status + " " + xhr.statusText);
+                            }
+                        });
+                    } else {
+                        alert("Gagal menghapus data: " + data.toast);
+                    }
+                    loadDataUser()
+                },
+                error: function(xhr) {
+                    console.error("Terjadi error:", xhr.responseText);
+                    alert("Terjadi kesalahan saat menghapus data.");
+                }
+            });
         })
     })
 </script>

@@ -119,8 +119,8 @@ class TableController extends Controller
             ]);
         } else {
             return response()->json([
-                'status' => 'error',
-                'toast' => 'Gagal mengupdate table',
+                'status' => 'berhasil',
+                'toast' => 'Berhasil mengupdate table',
             ]);
         }
 
@@ -321,8 +321,12 @@ class TableController extends Controller
                 'errors'     => $validator->errors()
             ]);
         }
-        $data = $req->all();
-        // $tambah = DB::table('users')->insert($data);
+
+        $data = $req->only(['name', 'username', 'email']);
+        if ($req->password) {
+            $data['password'] = bcrypt($req->password);
+        }
+        $tambah = DB::table('users')->insert($data);
 
         if ($data) {
             return response()->json([
@@ -335,6 +339,58 @@ class TableController extends Controller
                 'status' => 'error',
                 'toast' => 'Gagal menambah user',
                 'resets' => 'all',
+            ]);
+        }
+    }
+
+    public function ubahUser(Request $req)
+    {
+        $validator = Validator::make($req->all(), [
+            'id'            => 'required',
+            'name'          => 'required',
+            'username'      => 'required',
+            'email'         => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'errors' => $validator->errors(),
+            ]);
+        }
+        $data = $req->only(['name', 'username', 'email']);
+        if ($req->password) {
+            $data['password'] = bcrypt($req->password);
+        }
+        $id = $req->id;
+
+        $update = DB::table('users')->where('id', $id)->update($data);
+
+        if ($update) {
+            return response()->json([
+                'status' => 'berhasil',
+                'toast' => 'Berhasil mengupdate user',
+            ]);
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'toast' => 'Gagal mengupdate user',
+            ]);
+        }
+    }
+    public function hapusUser(Request $req, $id)
+    {
+        $delete = DB::table('users')->where('id', $id)->delete();
+
+        if ($delete) {
+            return response()->json([
+                'status' => 'berhasil',
+                'toast' => 'Berhasil menghapus data',
+            ]);
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'toast' => 'Gagal menghapus data',
             ]);
         }
     }

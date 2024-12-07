@@ -150,8 +150,6 @@
      $("#templates-modal").on("click", "#editFieldModal", function(e) {
          e.preventDefault();
 
-         console.log("Mengirim data untuk diedit...");
-
          let judul = $('#field-1').val();
          let deskripsi = $('#field-2').val();
          let id = $('#idfield').val();
